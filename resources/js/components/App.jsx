@@ -1,5 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 const App = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+          // Obtiene el CSRF Token
+          //await axios.get('http://localhost:8000/sanctum/csrf-cookie', { withCredentials: true });
+
+          // Realiza el inicio de sesión
+          const response = await axios.post(
+            'http://127.0.0.1:8000/api/v1/login',
+            { email, password }
+          );
+
+          console.log('Login Success:', response.data);
+        } catch (error) {
+          console.error('Login Error:', error.response.data);
+        }
+    };
     return (
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -15,7 +36,7 @@ const App = () => {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="#" method="POST" className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
                 Email address
@@ -27,6 +48,8 @@ const App = () => {
                   type="email"
                   required
                   autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                 />
               </div>
@@ -50,6 +73,8 @@ const App = () => {
                   type="password"
                   required
                   autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                 />
               </div>
